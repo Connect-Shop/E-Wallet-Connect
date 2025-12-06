@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Chatbot & Game Services</title>
+    
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'theme-red': '#FF1E1E',
+                        'theme-orange': '#FF8C00',
+                        'theme-blue': '#0A192F',
+                        'theme-light-blue': '#112240',
+                        'theme-white': '#E6F1FF',
+                        'accent': '#64FFDA'
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to right bottom, rgba(10, 25, 47, 0.9), rgba(10, 25, 47, 0.9)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",
+                        'gradient-primary': 'linear-gradient(135deg, #FF1E1E 0%, #FF8C00 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0A192F;
+            color: #E6F1FF;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A192F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #FF1E1E, #FF8C00);
+            border-radius: 5px;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(17, 34, 64, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 30, 30, 0.3);
+            border-color: #FF8C00;
+        }
+
+        /* Animation for Popup */
+        @keyframes popupIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .popup-animate {
+            animation: popupIn 0.3s ease-out forwards;
+        }
+
+        /* Sidebar Transition */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-closed {
+            transform: translateX(-100%);
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-theme-blue/90 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <button id="menuBtn" class="text-2xl text-white hover:text-theme-orange transition md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#" class="text-2xl font-bold italic tracking-wider bg-clip-text text-transparent bg-gradient-primary">
+                    <i class="fas fa-robot mr-2 text-theme-orange"></i>BOT GAME
+                </a>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 font-medium">
+                <a href="#home" class="hover:text-theme-orange transition">หน้าหลัก</a>
+                <a href="#services" class="hover:text-theme-orange transition">บริการ</a>
+                <a href="#promotion" class="hover:text-theme-orange transition">โปรโมชั่น</a>
+                <a href="#games" class="hover:text-theme-orange transition">ไอเทมเกม</a>
+                <a href="#contact" class="hover:text-theme-orange transition">ติดต่อ</a>
+            </div>
+
+            <a href="#contact" class="hidden md:block px-6 py-2 rounded-full bg-gradient-primary text-white font-bold hover:opacity-90 transition transform hover:scale-105 shadow-lg shadow-orange-500/30">
+                เริ่มใช้งานเลย
+            </a>
+        </div>
+    </nav>
+
+    <!-- Sidebar (Mobile) -->
+    <div id="sidebar" class="sidebar sidebar-closed fixed top-0 left-0 h-full w-64 bg-theme-light-blue z-50 shadow-2xl border-r border-white/10 pt-20 px-6">
+        <button id="closeSidebar" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-white">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="flex flex-col space-y-6 text-lg font-medium">
+            <a href="#home" class="sidebar-link hover:text-theme-orange flex items-center gap-3"><i class="fas fa-home w-6"></i> หน้าหลัก</a>
+            <a href="#services" class="sidebar-link hover:text-theme-orange flex items-center gap-3"><i class="fas fa-cogs w-6"></i> บริการ Chatbot</a>
+            <a href="#promotion" class="sidebar-link hover:text-theme-orange flex items-center gap-3"><i class="fas fa-tags w-6"></i> โปรโมชั่น</a>
+            <a href="#games" class="sidebar-link hover:text-theme-orange flex items-center gap-3"><i class="fas fa-gamepad w-6"></i> เติมเกม</a>
+            <a href="#contact" class="sidebar-link hover:text-theme-orange flex items-center gap-3"><i class="fas fa-envelope w-6"></i> ติดต่อเรา</a>
+        </div>
+    </div>
+    <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden backdrop-blur-sm"></div>
+
+    <!-- Popup Modal -->
+    <div id="promoPopup" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 hidden">
+        <div class="relative w-full max-w-lg mx-4 popup-animate">
+            <div class="absolute -top-4 -right-4 z-10">
+                <button onclick="closePopup()" class="bg-white text-red-600 rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg hover:bg-gray-200 transition">X</button>
+            </div>
+            <div class="relative bg-gradient-to-br from-theme-red to-theme-orange p-1 rounded-xl shadow-2xl shadow-orange-500/50">
+                <!-- Flash Sale Badge -->
+                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-red-900 px-6 py-2 rounded-full font-bold text-xl border-4 border-white shadow-lg z-20 whitespace-nowrap">
+                    <i class="fas fa-bolt"></i> FLASH SALE ลดสูงสุด 50%
+                </div>
+                
+                <div class="bg-theme-blue rounded-lg overflow-hidden border border-white/20 relative">
+                    <img src="https://img2.pic.in.th/pic/IMG_207185b29faee9343806.jpeg" alt="Promotion" class="w-full h-auto object-cover">
+                    <div class="p-4 text-center">
+                        <h3 class="text-2xl font-bold text-white mb-2">โปรโมชั่นพิเศษเปิดร้าน!</h3>
+                        <p class="text-gray-300 mb-4">สมัครใช้บริการ Chatbot วันนี้ รับส่วนลดทันที สำหรับ 100 ท่านแรก</p>
+                        <a href="#contact" onclick="closePopup()" class="inline-block w-full py-3 bg-gradient-primary text-white font-bold rounded-lg hover:brightness-110 transition">
+                            รับสิทธิ์ทันที
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-20 bg-hero-pattern bg-cover bg-center bg-fixed">
+        <div class="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-center md:text-left">
+                <span class="text-theme-orange font-bold tracking-wider uppercase mb-2 block">Premium Solutions</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                    ยกระดับธุรกิจด้วย <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-primary neon-text">LINE CHATBOT</span>
+                </h1>
+                <p class="text-gray-400 text-lg mb-8 max-w-lg mx-auto md:mx-0">
+                    เปลี่ยนไลน์ธรรมดา ให้เป็นสุดยอดเครื่องมือขายของ ดูดวง จองคิว และจัดการร้านค้าอัตโนมัติ เชื่อมต่อ Google Sheet Real-time
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#services" class="px-8 py-4 rounded-lg bg-gradient-primary font-bold text-white shadow-lg shadow-orange-500/30 hover:transform hover:-translate-y-1 transition">
+                        ดูบริการทั้งหมด
+                    </a>
+                    <a href="#contact" class="px-8 py-4 rounded-lg border border-theme-orange text-theme-orange font-bold hover:bg-theme-orange hover:text-white transition">
+                        ติดต่อสอบถาม
+                    </a>
+                </div>
+            </div>
+            <!-- Abstract Graphic/Tech visual -->
+            <div class="hidden md:flex justify-center relative">
+                <div class="absolute inset-0 bg-theme-orange/20 blur-3xl rounded-full"></div>
+                <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Chatbot AI" class="relative z-10 w-3/4 drop-shadow-2xl animate-bounce" style="animation-duration: 3s;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-theme-blue relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-theme-red/10 rounded-full blur-3xl"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4"><span class="text-theme-orange">7 ความสามารถ</span> สุดล้ำ</h2>
+                <div class="h-1 w-24 bg-gradient-primary mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1: E-Commerce -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-gradient-primary rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-shopping-cart text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">1. ระบบร้านค้า (E-Commerce)</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>ดึงข้อมูลสินค้าจาก Google Sheet</li>
+                        <li>Flex Message สวยงาม</li>
+                        <li>ตะกร้าสินค้า & ตัดสต็อกอัตโนมัติ</li>
+                        <li>ดูประวัติการสั่งซื้อและใบเสร็จย้อนหลัง</li>
+                    </ul>
+                </div>
+
+                <!-- Service 2: Divination -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-purple-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-crystal-ball text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">2. ดูดวง & เสี่ยงทาย</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>เซียมซี 28 ใบ พร้อมกลอน</li>
+                        <li>ไพ่ยิปซี (Major & Minor Arcana)</li>
+                        <li>ระบบ Paywall เก็บค่าครูก่อนดู</li>
+                        <li>สีมงคล เลขมงคล สถานที่ไหว้พระ</li>
+                    </ul>
+                </div>
+
+                <!-- Service 3: Booking -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-green-500 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-calendar-check text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">3. ระบบจองคิว</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>เลือกบริการและเวลา (Real-time)</li>
+                        <li>ออกบัตรคิว & เช็คเวลารอ</li>
+                        <li>ระบบเรียกคิวแจ้งเตือนผ่านไลน์</li>
+                    </ul>
+                </div>
+
+                <!-- Service 4: Repair -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-gray-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-tools text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">4. ระบบแจ้งซ่อม</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>เปิด Ticket แจ้งปัญหา/อาการเสีย</li>
+                        <li>อัปโหลดรูปอาการลง Google Drive</li>
+                        <li>ติดตามสถานะด้วย Repair ID</li>
+                    </ul>
+                </div>
+
+                <!-- Service 5: Payment -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-blue-500 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-wallet text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">5. การเงิน & ชำระเงิน</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>QR PromptPay ตามยอดเงิน</li>
+                        <li>Link/QR TrueMoney Wallet</li>
+                        <li>แอดมินยืนยันสลิป (Approve/Reject)</li>
+                        <li>เช็คยอดสะสมและ Points</li>
+                    </ul>
+                </div>
+
+                <!-- Service 6: Admin -->
+                <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-red-500 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-chart-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">6. หลังบ้าน (Admin Dashboard)</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>กราฟสรุปยอดขายแบบ Real-time</li>
+                        <li>จัดการคำสั่งซื้อ เรียกคิวผ่านแชท</li>
+                        <li>ดูรายการรอตรวจสอบ/ยกเลิก</li>
+                    </ul>
+                </div>
+
+                 <!-- Service 7: Basic -->
+                 <div class="glass-panel p-6 rounded-2xl item-card transition-all duration-300 group md:col-span-2 lg:col-span-3 lg:w-2/3 mx-auto border-theme-orange border">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-16 h-16 bg-theme-orange rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
+                            <i class="fas fa-cogs text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">7. ฟีเจอร์พื้นฐานครบวงจร</h3>
+                            <p class="text-gray-400 mb-2">ตอบโจทย์การใช้งานจริง ด้วยระบบอัตโนมัติที่ช่วยลดงานคน</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-theme-light-blue px-3 py-1 rounded-full text-xs border border-white/10">Q&A อัตโนมัติ</span>
+                                <span class="bg-theme-light-blue px-3 py-1 rounded-full text-xs border border-white/10">Log การใช้งาน</span>
+                                <span class="bg-theme-light-blue px-3 py-1 rounded-full text-xs border border-white/10">เก็บ Profile ลูกค้า</span>
+                                <span class="bg-theme-light-blue px-3 py-1 rounded-full text-xs border border-white/10">Auto Setup Google Sheet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section (Garena Style) -->
+    <section id="games" class="py-20 bg-theme-light-blue relative">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold uppercase tracking-widest"><i class="fas fa-gamepad text-theme-red mr-2"></i> GAME SHOP</h2>
+                    <p class="text-gray-400">เติมเกมออนไลน์ ราคาสุดคุ้ม (Mockup)</p>
+                </div>
+                <a href="#" class="text-theme-orange hover:text-white transition">ดูทั้งหมด <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Game Item 1 -->
+                <div class="bg-theme-blue border border-white/10 rounded-lg overflow-hidden hover:border-theme-orange transition group relative">
+                    <div class="absolute top-0 right-0 bg-red-600 text-xs px-2 py-1 font-bold z-10">-20%</div>
+                    <div class="h-40 bg-gray-800 relative overflow-hidden">
+                        <!-- Placeholder for Game Image -->
+                        <img src="https://wallpapers.com/images/hd/rov-game-characters-xv9q8j9q8j9q8j9q.jpg" onerror="this.src='https://placehold.co/300x400/1a1a1a/FFF?text=ROV'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="RoV">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">RoV: คูปองสุดคุ้ม</h4>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <span class="text-xs text-gray-500 line-through">฿500</span>
+                                <div class="text-theme-orange font-bold">฿400</div>
+                            </div>
+                            <button class="bg-theme-red hover:bg-red-700 text-white text-xs px-3 py-1 rounded">ซื้อ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Item 2 -->
+                <div class="bg-theme-blue border border-white/10 rounded-lg overflow-hidden hover:border-theme-orange transition group">
+                    <div class="h-40 bg-gray-800 relative overflow-hidden">
+                        <img src="https://i.pinimg.com/originals/9f/8e/3a/9f8e3a4b6b6b6b6b6b6b6b6b6b6b6b6b.jpg" onerror="this.src='https://placehold.co/300x400/1a1a1a/FFF?text=Free+Fire'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Free Fire">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">Free Fire: เพชรแพ็คเล็ก</h4>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <div class="text-theme-orange font-bold">฿150</div>
+                            </div>
+                            <button class="bg-theme-red hover:bg-red-700 text-white text-xs px-3 py-1 rounded">ซื้อ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Item 3 -->
+                <div class="bg-theme-blue border border-white/10 rounded-lg overflow-hidden hover:border-theme-orange transition group">
+                    <div class="h-40 bg-gray-800 relative overflow-hidden">
+                        <img src="https://pbs.twimg.com/media/Fv2_2_2WYAEx_2_.jpg" onerror="this.src='https://placehold.co/300x400/1a1a1a/FFF?text=Valorant'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Valorant">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">Valorant: Points</h4>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <div class="text-theme-orange font-bold">฿300</div>
+                            </div>
+                            <button class="bg-theme-red hover:bg-red-700 text-white text-xs px-3 py-1 rounded">ซื้อ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Item 4 -->
+                <div class="bg-theme-blue border border-white/10 rounded-lg overflow-hidden hover:border-theme-orange transition group">
+                    <div class="h-40 bg-gray-800 relative overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Call_of_Duty_Mobile_Logo.png/220px-Call_of_Duty_Mobile_Logo.png" onerror="this.src='https://placehold.co/300x400/1a1a1a/FFF?text=COD+Mobile'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="COD M">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">COD Mobile: CP</h4>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <div class="text-theme-orange font-bold">฿200</div>
+                            </div>
+                            <button class="bg-theme-red hover:bg-red-700 text-white text-xs px-3 py-1 rounded">ซื้อ</button>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Game Item 5 -->
+                 <div class="bg-theme-blue border border-white/10 rounded-lg overflow-hidden hover:border-theme-orange transition group">
+                    <div class="h-40 bg-gray-800 relative overflow-hidden">
+                        <img src="https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8XB3bi888QTLZYdl7Oi0s.png" onerror="this.src='https://placehold.co/300x400/1a1a1a/FFF?text=Genshin'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Genshin">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">Genshin: Welkin Moon</h4>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <div class="text-theme-orange font-bold">฿179</div>
+                            </div>
+                            <button class="bg-theme-red hover:bg-red-700 text-white text-xs px-3 py-1 rounded">ซื้อ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                 <div class="inline-block p-4 border border-theme-orange/50 rounded-lg bg-theme-blue/50 backdrop-blur">
+                    <p class="text-sm text-gray-300"><i class="fas fa-info-circle text-theme-orange"></i> ระบบเติมเกมเชื่อมต่อ API ตรง ปลอดภัย 100% ไอเทมเข้าทันที</p>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium/Pricing Section -->
+    <section id="promotion" class="py-20 bg-theme-blue relative">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">แพ็คเกจ <span class="text-theme-orange">PREMIUM</span></h2>
+                <p class="text-gray-400">เลือกแพ็คเกจที่เหมาะกับธุรกิจของคุณ</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Plan 1 Day -->
+                <div class="bg-theme-light-blue rounded-2xl p-8 border border-white/5 hover:border-theme-red transition relative overflow-hidden group">
+                    <h3 class="text-xl font-bold text-gray-400 mb-2">ทดลองใช้</h3>
+                    <div class="text-4xl font-bold text-white mb-4">1 วัน</div>
+                    <p class="text-theme-orange font-bold text-2xl mb-6">฿99</p>
+                    <ul class="space-y-3 mb-8 text-gray-400 text-sm">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> เข้าถึงทุกแอพพรีเมี่ยม</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> ระบบ Shop & Payment</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Support 24 ชม.</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-lg border border-white/20 hover:bg-white hover:text-theme-blue transition font-bold">เลือกแพ็คเกจ</button>
+                </div>
+
+                <!-- Plan 7 Days (Popular) -->
+                <div class="bg-gradient-to-b from-theme-red to-theme-orange rounded-2xl p-1 transform md:-translate-y-4 shadow-2xl shadow-orange-500/20">
+                    <div class="bg-theme-blue rounded-xl p-8 h-full relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-theme-red text-white text-xs font-bold px-3 py-1 rounded-bl-lg">ขายดี</div>
+                        <h3 class="text-xl font-bold text-theme-orange mb-2">คุ้มค่า</h3>
+                        <div class="text-4xl font-bold text-white mb-4">7 วัน</div>
+                        <p class="text-white font-bold text-3xl mb-6">฿490 <span class="text-sm text-gray-400 line-through font-normal">฿693</span></p>
+                        <ul class="space-y-3 mb-8 text-gray-300 text-sm">
+                            <li><i class="fas fa-check text-theme-orange mr-2"></i> เข้าถึงทุกแอพพรีเมี่ยม</li>
+                            <li><i class="fas fa-check text-theme-orange mr-2"></i> ปรับแต่งธีมได้</li>
+                            <li><i class="fas fa-check text-theme-orange mr-2"></i> รายงาน Dashboard</li>
+                            <li><i class="fas fa-check text-theme-orange mr-2"></i> Support VIP</li>
+                        </ul>
+                        <button class="w-full py-3 rounded-lg bg-gradient-primary text-white font-bold hover:brightness-110 shadow-lg">เลือกแพ็คเกจ</button>
+                    </div>
+                </div>
+
+                <!-- Plan Monthly -->
+                <div class="bg-theme-light-blue rounded-2xl p-8 border border-white/5 hover:border-theme-red transition relative overflow-hidden group">
+                    <h3 class="text-xl font-bold text-gray-400 mb-2">มืออาชีพ</h3>
+                    <div class="text-4xl font-bold text-white mb-4">รายเดือน</div>
+                    <p class="text-theme-orange font-bold text-2xl mb-6">฿1,590</p>
+                    <ul class="space-y-3 mb-8 text-gray-400 text-sm">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> ใช้งานได้ทุกฟีเจอร์</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> ไม่จำกัดจำนวนลูกค้า</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> ติดตั้งระบบฟรี</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> ปรึกษาการตลาด</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-lg border border-white/20 hover:bg-white hover:text-theme-blue transition font-bold">เลือกแพ็คเกจ</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcement/Footer -->
+    <section id="contact" class="bg-black py-12 border-t border-white/10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div>
+                    <h2 class="text-2xl font-bold mb-4 text-white">ประกาศสำคัญ <i class="fas fa-bullhorn text-theme-orange"></i></h2>
+                    <div class="bg-white/5 p-4 rounded-lg border-l-4 border-theme-red max-w-lg">
+                        <p class="text-gray-300 text-sm">
+                            <span class="text-theme-red font-bold">[Maintenance]</span> ระบบจะปิดปรับปรุงเซิร์ฟเวอร์ทุกวันอังคาร เวลา 03:00 - 05:00 น. เพื่อประสิทธิภาพที่ดีขึ้น
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="text-xl font-bold mb-4">ติดต่อเรา</h3>
+                    <div class="flex gap-4 justify-center md:justify-end mb-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white hover:scale-110 transition"><i class="fab fa-line text-xl"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:scale-110 transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-theme-red flex items-center justify-center text-white hover:scale-110 transition"><i class="fab fa-youtube text-xl"></i></a>
+                    </div>
+                    <p class="text-gray-500 text-sm">© 2025 BotGame Studio. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Popup Logic
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('promoPopup').classList.remove('hidden');
+            }, 500); // Delay slightly for effect
+        }
+
+        function closePopup() {
+            document.getElementById('promoPopup').classList.add('hidden');
+        }
+
+        // Sidebar Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebarBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('sidebar-closed');
+            if (sidebar.classList.contains('sidebar-closed')) {
+                overlay.classList.add('hidden');
+            } else {
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeSidebarBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when link clicked
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(window.innerWidth < 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Smooth Scroll for Anchor Links (Native HTML usually handles this, but ensuring smoothness)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
